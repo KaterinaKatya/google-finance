@@ -47,7 +47,7 @@ jobs:
 
     - name: Run tests based on input
       run: |
-        if [ "${{ github.event.inputs.test_option }}" == "test_stock_symbols" ]; then
+        if [ "${{ github.event.inputs.test_option }}" = "test_stock_symbols" ]; then
           pytest -v -k "test_stock_symbols"
         else
           pytest -v
