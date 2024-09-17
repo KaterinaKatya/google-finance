@@ -34,23 +34,20 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Install Chrome and ChromeDriver
+    - name: List Python versions
       run: |
-        sudo apt-get update
-        sudo apt-get install -y wget unzip
-        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-        sudo dpkg -i google-chrome-stable_current_amd64.deb
-        sudo apt-get -f install
-        wget https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip
-        unzip chromedriver_linux64.zip
-        sudo mv chromedriver /usr/local/bin/chromedriver
-        sudo chmod +x /usr/local/bin/chromedriver
+        python --version
+        python3 --version
+        python3.9 --version
+        python3.10 --version
+        python3.11 --version
 
     - name: Run tests based on input
       run: |
         if [ "${{ github.event.inputs.test_option }}" = "test_stock_symbols" ]; then
-          pytest -v -k "test_stock_symbols"
+          python -m pytest -v -k "test_stock_symbols"
         else
-          pytest -v
+          python -m pytest -v
         fi
+
 
