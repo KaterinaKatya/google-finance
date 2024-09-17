@@ -1,7 +1,5 @@
 import pytest
 from selenium import webdriver
-import os
-from datetime import datetime
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
