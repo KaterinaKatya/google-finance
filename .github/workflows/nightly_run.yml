@@ -2,8 +2,7 @@ name: Nightly Run
 
 on:
   schedule:
-    # Schedule the workflow to run every day at 3:30 PM EST
-    - cron: '43 20 * * *'  # 19:30 UTC is 3:30 PM EST
+    - cron: '47 21 * * *'
 
 jobs:
   run-tests:
