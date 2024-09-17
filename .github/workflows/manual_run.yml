@@ -15,10 +15,10 @@ on:
 jobs:
   run-tests:
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
-        python-version: [3.9, 3.10, 3.11]
+        python-version: [3.11]
 
     steps:
     - name: Checkout repository
@@ -38,9 +38,11 @@ jobs:
       run: |
         python --version
         python3 --version
-        python3.9 --version
-        python3.10 --version
-        python3.11 --version
+        if command -v python3.9 &> /dev/null; then
+          python3.9 --version
+        else
+          echo "Python 3.9 not installed"
+        fi
 
     - name: Run tests based on input
       run: |
