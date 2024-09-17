@@ -38,7 +38,7 @@ jobs:
         export DISPLAY=:99
         pytest -v
       env:
-        DISPLAY: :99.0
+        DISPLAY: :99
         PYTHONPATH: ${{ github.workspace }}
 
 
