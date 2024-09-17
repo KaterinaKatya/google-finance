@@ -16,18 +16,19 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.11]  # Running only on Python 3.11
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python-version }}
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Install Chrome
       run: |
@@ -36,23 +37,21 @@ jobs:
 
     - name: Install Chromedriver
       run: |
-        sudo apt-get install -yqq unzip
-        wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
-        unzip /tmp/chromedriver.zip -d /usr/local/bin/
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install webdriver_manager
 
     - name: Run tests based on input
       run: |
-        if [ "${{ github.event.inputs.test_option }}" = "test_stock_symbols" ]; then
+        Xvfb :99 -screen 0 1280x1024x24 &
+        export DISPLAY=:99
+        if [ "${{ github.event.inputs.test_option }}" == "test_stock_symbols" ]; then
           pytest -v -k "test_stock_symbols"
         else
           pytest -v
         fi
-      shell: bash
+      env:
+        DISPLAY: :99.0
+        PYTHONPATH: ${{ github.workspace }}
+
 
 
 
