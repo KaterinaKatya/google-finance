@@ -40,3 +40,4 @@ jobs:
           pytest -v -k "test_stock_symbols"
         else
           pytest -v
+        fi
