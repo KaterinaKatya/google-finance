@@ -12,6 +12,7 @@ url = "https://www.google.com/finance/"
 @pytest.fixture(scope='function')
 def driver(request):
     chrome_options = Options()
+    chrome_options.add_argument('--remote-debugging-pipe')
     chrome_options.add_argument('--no-sandbox')
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--disable-gpu')
