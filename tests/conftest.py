@@ -22,13 +22,9 @@ def driver(request):
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
     driver.get(url)
-
-    # Common setup
     driver.maximize_window()
     driver.delete_all_cookies()
-
     yield driver
-
     driver.quit()
 
 
