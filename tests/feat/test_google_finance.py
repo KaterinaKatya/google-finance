@@ -3,14 +3,12 @@ from src.page_objects.pages.google_finance_page import GoogleFinancePage
 from src.data.stock_data import *
 
 
-@pytest.mark.smoke
 def test_verify_header(driver):
     google_finance_page = GoogleFinancePage(driver)
     displayed_header = google_finance_page.get_header_text()
     assert finance_page_header == displayed_header
 
 
-@pytest.mark.smoke
 def test_stock_symbols(driver):
     google_finance_page = GoogleFinancePage(driver)
     stock_symbols = google_finance_page.get_stock_symbols()
