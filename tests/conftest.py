@@ -9,35 +9,43 @@ from webdriver_manager.chrome import ChromeDriverManager
 url = "https://www.google.com/finance/"
 
 
-def pytest_addoption(parser):
-    parser.addoption(
-        "--local",
-        action="store_true",
-        default=False,
-        help="Run tests locally"
-    )
-    parser.addoption(
-        "--firefox",
-        action="store_true",
-        help="Switch browser from default Chrome to Firefox"
-    )
-
-
 @pytest.fixture(scope='function')
 def driver(request):
+    # Check if the test is running in headless mode for CI environment
+    is_ci = os.getenv('CI', 'false').lower() == 'true'
+
     if request.config.getoption('--firefox'):
-        driver = webdriver.Firefox()
+        # Setup for Firefox
+        firefox_options = webdriver.FirefoxOptions()
+        if is_ci:
+            firefox_options.add_argument('--headless')  # Run headless for CI
+        driver = webdriver.Firefox(service=FirefoxService(GeckoDriverManager().install()), options=firefox_options)
     else:
+        # Setup for Chrome
         chrome_options = Options()
         chrome_options.add_argument('--no-sandbox')
         chrome_options.add_argument('--disable-dev-shm-usage')
+        chrome_options.add_argument('--disable-gpu')
+        if is_ci:
+            chrome_options.add_argument('--headless')  # Run headless for CI
+            chrome_options.add_argument('--window-size=1920x1080')  # Set a default window size
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
+    # Common setup
     driver.maximize_window()
     driver.delete_all_cookies()
-    driver.get(url)
+
     yield driver
+
     driver.quit()
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--firefox",
+        action="store_true",
+        help="Run tests using Firefox"
+    )
 
 
 @pytest.hookimpl(hookwrapper=True)
