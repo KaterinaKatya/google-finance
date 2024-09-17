@@ -17,7 +17,7 @@ def driver(request):
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--remote-debugging-port=9222')  # Important!
-    #chrome_options.add_argument('--headless')
+    chrome_options.add_argument('--headless')
     chrome_options.add_argument('--window-size=1920x1080')
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
@@ -38,9 +38,4 @@ def pytest_addoption(parser):
         action="store_true",
         help="Run tests using Firefox"
     )
-    parser.addoption(
-        "--local",
-        action="store_true",
-        default=False,
-        help="local tests being run"
-    )
+
