@@ -3,7 +3,7 @@ name: Nightly Run
 on:
   schedule:
     # Run at 3:30 PM EST (8:30 PM UTC) every day
-    - cron: '10 22 * * *'
+    - cron: '15 22 * * *'
 
 jobs:
   run-tests:
