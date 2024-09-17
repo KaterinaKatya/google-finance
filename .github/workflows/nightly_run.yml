@@ -2,32 +2,27 @@ name: Nightly Run
 
 on:
   schedule:
-    - cron: '0 2 * * *' # Runs at 2:00 AM UTC every day
+    # Run at 3:30 PM EST (8:30 PM UTC) every day
+    - cron: '30 20 * * *'
 
 jobs:
-  test:
+  run-tests:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: 3.11
 
-    - name: Install dependencies
+    - name: Install Chrome
       run: |
-        pip install -r requirements.txt
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
 
-    - name: Run tests
-      run: |
-        pytest --env staging
+    - name: Install ChromeDriver
+      run:
 
-    - name: Upload Test Results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-results
-        path: ./results
