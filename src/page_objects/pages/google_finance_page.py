@@ -17,3 +17,6 @@ class GoogleFinancePage:
         except TimeoutException:
             print("Failed to load stock symbols")
             return []
+
+    def get_header_text(self):
+        return self.driver.find_element(*GoogleFinanceLocators.header).text

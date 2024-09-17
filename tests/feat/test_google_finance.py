@@ -4,6 +4,13 @@ from src.data.stock_data import *
 
 
 @pytest.mark.smoke
+def test_verify_header(driver):
+    google_finance_page = GoogleFinancePage(driver)
+    displayed_header = google_finance_page.get_header_text()
+    assert finance_page_header == displayed_header
+
+
+@pytest.mark.smoke
 def test_stock_symbols(driver):
     google_finance_page = GoogleFinancePage(driver)
     stock_symbols = google_finance_page.get_stock_symbols()
@@ -19,6 +26,3 @@ def test_stock_symbols(driver):
         print(f"Stock symbols retrieved from UI but not in the expected data: {not_in_expected}")
     if not_on_ui:
         print(f"Stock symbols expected but not found in the UI: {not_on_ui}")
-
-
-
