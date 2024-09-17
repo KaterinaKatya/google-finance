@@ -34,15 +34,15 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: List Python versions
+    - name: Install Google Chrome
       run: |
-        python --version
-        python3 --version
-        if command -v python3.9 &> /dev/null; then
-          python3.9 --version
-        else
-          echo "Python 3.9 not installed"
-        fi
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+        sudo apt install ./google-chrome-stable_current_amd64.deb
+
+    - name: Set up ChromeDriver
+      uses: actions/setup-chromedriver@v2
 
     - name: Run tests based on input
       run: |
@@ -51,5 +51,3 @@ jobs:
         else
           python -m pytest -v
         fi
-
-
