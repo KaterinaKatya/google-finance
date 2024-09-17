@@ -1,4 +1,4 @@
-name: Manual Run
+name: Run Tests
 
 on:
   workflow_dispatch:
@@ -16,14 +16,18 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        python-version: [3.11]  # Running only on Python 3.11
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
-        python-version: '3.11'  # Only use Python 3.11
+        python-version: ${{ matrix.python-version }}
 
     - name: Install Chrome
       run: |
@@ -32,8 +36,9 @@ jobs:
 
     - name: Install Chromedriver
       run: |
-        sudo apt-get install -y chromium-chromedriver
-        sudo ln -s /usr/lib/chromium-browser/chromedriver /usr/local/bin/chromedriver
+        sudo apt-get install -yqq unzip
+        wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+        unzip /tmp/chromedriver.zip -d /usr/local/bin/
 
     - name: Install dependencies
       run: |
@@ -42,13 +47,10 @@ jobs:
 
     - name: Run tests based on input
       run: |
-        if [ "${{ github.event.inputs.test_option }}" = "test_stock_symbols" ]; then
+        if [ "${{ github.event.inputs.test_option }}" == "test_stock_symbols" ]; then
           pytest -v -k "test_stock_symbols"
-        else:
+        else
           pytest -v
+        fi
 
-    - name: Verify Chrome and Chromedriver versions
-      run: |
-        google-chrome --version
-        chromedriver --version
 
