@@ -2,7 +2,7 @@ name: Nightly Run
 
 on:
   schedule:
-    - cron: '52 21 * * *'
+    - cron: '0 3 * * *'
 
 jobs:
   run-tests:
