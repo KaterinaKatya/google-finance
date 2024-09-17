@@ -17,10 +17,11 @@ def driver(request):
     chrome_options.add_argument('--disable-dev-shm-usage')
     chrome_options.add_argument('--disable-gpu')
     chrome_options.add_argument('--remote-debugging-port=9222')  # Important!
-    chrome_options.add_argument('--headless')
+    #chrome_options.add_argument('--headless')
     chrome_options.add_argument('--window-size=1920x1080')
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    driver.get(url)
 
     # Common setup
     driver.maximize_window()
@@ -37,26 +38,9 @@ def pytest_addoption(parser):
         action="store_true",
         help="Run tests using Firefox"
     )
-
-
-@pytest.hookimpl(hookwrapper=True)
-def pytest_runtest_makereport(item):
-    timestamp = datetime.now().strftime('%H-%M-%S')
-    pytest_html = item.config.pluginmanager.getplugin('html')
-    outcome = yield
-    report = outcome.get_result()
-    extra = getattr(report, 'extra', [])
-    if report.when == 'call':
-        feature_request = item.funcargs['request']
-        driver = feature_request.getfixturevalue('driver')
-        xfail = hasattr(report, 'wasxfail')
-        screenshot_dir = os.path.join(os.getcwd(), 'screenshots')
-        if not os.path.exists(screenshot_dir):
-            os.makedirs(screenshot_dir)
-        if (report.skipped and xfail) or (report.failed and not xfail):
-            screenshot_path = os.path.join(screenshot_dir, f'{timestamp}.png')
-            driver.save_screenshot(screenshot_path)
-            extra.append(pytest_html.extras.image(screenshot_path))
-            extra.append(pytest_html.extras.html('<div>Additional HTML</div>'))
-            print(f"Test failed. Screenshot saved at {screenshot_path}")
-        report.extra = extra
+    parser.addoption(
+        "--local",
+        action="store_true",
+        default=False,
+        help="local tests being run"
+    )
