@@ -2,8 +2,8 @@ name: Nightly Run
 
 on:
   schedule:
-    # Run at 3:30 PM EST (8:30 PM UTC) every day
-    - cron: '30 20 * * *'
+    # Schedule the workflow to run every day at 3:30 PM EST
+    - cron: '43 20 * * *'  # 19:30 UTC is 3:30 PM EST
 
 jobs:
   run-tests:
@@ -13,16 +13,32 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python 3.11
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
     - name: Install Chrome
       run: |
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
 
-    - name: Install ChromeDriver
-      run:
+    - name: Install Chromedriver
+      run: |
+        pip install webdriver_manager
+
+    - name: Run all tests
+      run: |
+        Xvfb :99 -screen 0 1280x1024x24 &
+        export DISPLAY=:99
+        pytest -v
+      env:
+        DISPLAY: :99.0
+        PYTHONPATH: ${{ github.workspace }}
+
 
