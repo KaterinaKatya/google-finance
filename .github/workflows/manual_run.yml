@@ -52,6 +52,8 @@ jobs:
         else
           pytest -v
         fi
+      shell: /usr/bin/bash -e {0}
+
 
 
 
